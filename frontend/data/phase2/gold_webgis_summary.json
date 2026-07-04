@@ -1,0 +1,173 @@
+{
+  "project": "Daqiq — GeoAI Café Site Selection · Milan",
+  "phase": "Phase 2 — Comune di Milano scale",
+  "generated": "2026-04-26 13:13",
+  "study_area": "Comune di Milano (All 9 Municipi)",
+  "h3_resolution": 9,
+  "cells": {
+    "total_viable": 971,
+    "positive_label": 345,
+    "negative_label": 626,
+    "positive_rate": 0.3553
+  },
+  "suitability_tiers": {
+    "HIGH": 359,
+    "MEDIUM": 324,
+    "LOW": 288,
+    "thresholds": {
+      "combined_high": 0.6153,
+      "combined_low": 0.30476400000000003,
+      "logic": "HIGH: combined_score >= combined_high; MEDIUM: combined_low <= combined_score < combined_high; LOW: combined_score < combined_low",
+      "informational_only": {
+        "ahp_high": 0.5312362685708546,
+        "ahp_med": 0.43508378129594105,
+        "rf_high": 0.69649,
+        "rf_med": 0.04853166666666668,
+        "note": "AHP and RF quantiles are not used in tier assignment. Tiers are derived exclusively from combined_score quantiles computed on training cells only."
+      }
+    }
+  },
+  "score_ranges": {
+    "ahp_score": {
+      "min": 0.1043,
+      "max": 0.8016,
+      "mean": 0.4931
+    },
+    "rf_probability": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.4406
+    },
+    "combined_score": {
+      "min": 0.0149,
+      "max": 0.9912,
+      "mean": 0.5005
+    }
+  },
+  "model_performance": {
+    "cv_context": "Natural-distribution training set (655 cells), StratifiedGroupKFold, class_weight='balanced'",
+    "rf_cv_auc_mean": 0.9462,
+    "rf_cv_auc_std": 0.0211,
+    "rf_cv_accuracy_mean": 0.8555,
+    "rf_cv_precision_mean": 0.7716,
+    "rf_cv_recall_mean": 0.762,
+    "val_context": "Natural class distribution, held-out validation set",
+    "rf_auc_validation": 0.951,
+    "val_accuracy": 0.8481,
+    "val_precision": 0.7665,
+    "val_recall": 0.9343,
+    "val_tn": 140,
+    "val_fp": 39,
+    "val_fn": 9,
+    "val_tp": 128,
+    "spearman_ahp_rf_cell_level": 0.7937,
+    "spearman_ahp_rf_pvalue": 0.0,
+    "rf_auc_no_local_cafe_density": 0.9429,
+    "note_metrics": "cv_* metrics computed on natural-distribution training folds (655 cells) with class_weight='balanced'. val_* metrics computed on natural-distribution held-out set. These are DISTINCT contexts and must not be presented as equivalent.",
+    "perm_null_p95_cell_level": 0.8534,
+    "perm_null_p99_cell_level": 0.8651,
+    "perm_null_mean_cell_level": 0.8044,
+    "perm_pval_cell_level": 0.6441,
+    "perm_flag_cell_level": false,
+    "perm_n_cell_level": 10000
+  },
+  "features": {
+    "count": 13,
+    "shap_columns": [
+      "shap_Metro_Access",
+      "shap_Bus_Tram_Density",
+      "shap_Network_Centrality",
+      "shap_Population_Density",
+      "shap_Night_Light",
+      "shap_Retail_Density",
+      "shap_Tourist_POIs",
+      "shap_POI_Diversity",
+      "shap_Pedestrian_Street",
+      "shap_Market_Opportunity",
+      "shap_Café_Density",
+      "shap_Office_Density",
+      "shap_University_Proximity"
+    ],
+    "ahp_clusters": {
+      "Accessibility": {
+        "weight": 0.3764,
+        "features": [
+          "Metro Access",
+          "Bus/Tram Density",
+          "Network Centrality"
+        ]
+      },
+      "Demand Potential": {
+        "weight": 0.2998,
+        "features": [
+          "Population Density",
+          "Night Light"
+        ]
+      },
+      "Urban Context": {
+        "weight": 0.2535,
+        "features": [
+          "Retail Density",
+          "POI Diversity",
+          "Pedestrian Street",
+          "Tourist POIs"
+        ]
+      },
+      "Competition": {
+        "weight": 0.0703,
+        "features": [
+          "Market Opportunity"
+        ]
+      }
+    },
+    "rf_only_features": [
+      "Café Density",
+      "Office Density",
+      "University Proximity"
+    ],
+    "note": "Café Density excluded from AHP (criterion redundancy). Retained in RF per Han et al. 2024 co-location theory."
+  },
+  "colour_ramp": {
+    "field": "combined_score",
+    "type": "continuous",
+    "method": "percentile-rank average of ahp_score and rf_probability",
+    "note": "combined_score is uniformly distributed in [0,1]. Colour stops are percentile-based, not absolute score values.",
+    "stops": [
+      [
+        0.0,
+        "#d73027"
+      ],
+      [
+        0.2,
+        "#f46d43"
+      ],
+      [
+        0.35,
+        "#fdae61"
+      ],
+      [
+        0.5,
+        "#a6d96a"
+      ],
+      [
+        0.65,
+        "#1a9850"
+      ]
+    ],
+    "tier_colours": {
+      "HIGH": "#1a9850",
+      "MEDIUM": "#fdae61",
+      "LOW": "#d73027"
+    }
+  },
+  "files": {
+    "gold_webgis_layer.geojson": "Production WebGIS layer — all cells, all scores, SHAP vectors, tier",
+    "gold_shap_scores.geojson": "Full Gold SHAP output (includes raw feature col names — not for frontend)",
+    "gold_ahp_scores.geojson": "AHP scores and cluster scores per cell",
+    "gold_rf_scores.geojson": "RF probability scores and ranks",
+    "gold_ahp_vs_shap_comparison.csv": "Core thesis comparison table",
+    "gold_shap_importance.csv": "Global SHAP feature importance",
+    "gold_rf_model.pkl": "Trained Random Forest (Phase 2 starting point)",
+    "gold_feature_cols.pkl": "Feature column order for model inference"
+  }
+}

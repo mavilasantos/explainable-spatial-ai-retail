@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAQIQ WebGIS | Explainable GeoAI for Urban Retail Site Selection</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="title-block">
+        <p class="eyebrow">WebGIS Frontend</p>
+        <h1>Explainable GeoAI for Urban Retail Site Selection</h1>
+        <p class="subtitle" id="dataset-summary">Loading Phase 2 — Comune di Milano (971 cells)…</p>
+      </div>
+      <div class="toolbar">
+        <div class="segmented-control" aria-label="Map colour mode">
+          <button id="mode-combined" class="is-active" type="button">Combined Score</button>
+          <button id="mode-tier" type="button">Suitability Tier</button>
+        </div>
+        <div class="segmented-control" aria-label="Audience view">
+          <button id="view-entrepreneur" class="is-active" type="button">Entrepreneur View</button>
+          <button id="view-examiner" type="button">Thesis/Examiner View</button>
+        </div>
+        <button id="open-methodology" class="ghost-button" type="button">About / Methodology</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar sidebar-left">
+        <section class="card">
+          <div class="card-header">
+            <h2>Search / Filter</h2>
+            <p>Refine cells in real time.</p>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Suitability tier</span>
+            <label class="check-row">
+              <input id="tier-high" type="checkbox" checked>
+              <span>HIGH</span>
+            </label>
+            <label class="check-row">
+              <input id="tier-medium" type="checkbox" checked>
+              <span>MEDIUM</span>
+            </label>
+            <label class="check-row">
+              <input id="tier-low" type="checkbox" checked>
+              <span>LOW</span>
+            </label>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="score-threshold">
+              Minimum combined score
+              <strong id="score-threshold-value">0.00</strong>
+            </label>
+            <input id="score-threshold" type="range" min="0" max="1" step="0.01" value="0">
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="ranking-limit">Top N ranking</label>
+            <select id="ranking-limit">
+              <option value="5">Top 5</option>
+              <option value="10" selected>Top 10</option>
+              <option value="20">Top 20</option>
+            </select>
+          </div>
+          <div class="status-grid">
+            <div>
+              <span class="status-label">Visible cells</span>
+              <strong id="visible-count">0</strong>
+            </div>
+            <div>
+              <span class="status-label">Divergence cases</span>
+              <strong id="divergence-count">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Top Ranked Cells</h2>
+            <p>Sorted by combined suitability.</p>
+          </div>
+          <ol id="ranking-list" class="ranking-list"></ol>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Legend</h2>
+            <p>Driven by the summary metadata.</p>
+          </div>
+          <div id="legend-panel" class="legend-panel"></div>
+        </section>
+      </aside>
+
+      <section class="map-panel">
+        <div class="map-overlay-card">
+          <strong>Academic note</strong>
+          <span>
+            AHP and RF remain separate indicators throughout the interface. The combined score is shown only as a synthesis layer.
+          </span>
+        </div>
+        <div id="map" aria-label="Map of Milan suitability cells"></div>
+      </section>
+
+      <aside class="sidebar sidebar-right">
+        <section class="card details-card">
+          <div class="card-header">
+            <h2>Cell Details</h2>
+            <p>Click a hexagon or ranking item.</p>
+          </div>
+          <div id="details-panel" class="details-panel">
+            <div class="empty-state">
+              <h3>No cell selected</h3>
+              <p>Select a hexagon on the map to inspect its scores, explanatory factors, and SHAP profile.</p>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div id="methodology-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="methodology-title">
+    <div class="modal-backdrop" data-close-modal="true"></div>
+    <div class="modal-dialog">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">Thesis Transparency Panel</p>
+          <h2 id="methodology-title">About / Methodology</h2>
+        </div>
+        <button id="close-methodology" class="ghost-button" type="button">Close</button>
+      </header>
+      <div id="methodology-content" class="modal-content">
+        <section class="card">
+          <div class="card-header">
+            <h2>About / Methodology</h2>
+            <p>Loading methodology metadata...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>
